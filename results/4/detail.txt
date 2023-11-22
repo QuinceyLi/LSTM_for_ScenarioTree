@@ -1,0 +1,21 @@
+model train time:
+9m35s
+
+skip:
+4
+
+branch:
+[1,15,8,5]
+
+mat_dict = {             
+"ARMA-GARCH": "ag_tree_04-Nov-2023 10_49_47.mat",             
+"kmeans": "kmeans_tree_04-Nov-2023 13_40_44.mat",             
+"moment_matching": "mm_tree_04-Nov-2023 16_49_08.mat",             
+"NN":"multitree_12112023-093937-e10.mat"             
+}
+
+generation_time:(59个)
+ARMA-GARCH	2622S 
+kmeans	10064s 
+moment matching	7655s 
+NeuroNetwork	11m44s
