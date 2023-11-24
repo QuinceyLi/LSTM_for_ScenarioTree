@@ -48,8 +48,10 @@ def get_wealth(porforlio: np.array, time_idx: int, return_data: np.array):
     return_data = return_data[time_idx:time_idx + skip,:] + 1
 
     for d in range(skip):
-        w1 = norisk * ( (1+interest_rate) ** skip )
+        # w1 = norisk * ( (1+interest_rate) ** skip )
+        w1 = norisk *  ( (1+interest_rate) ** (d+1) )
         w2 = np.dot(stock, return_data[d,:])
+        stock = stock * return_data[d,:]
         wealth_change[d] = w1 + w2
 
     return wealth_change

@@ -230,13 +230,12 @@ class Bayesian_LSTM(Model):
 					mu,sigma = tf.split(out, 2, axis=1) # mu: [[[mu1 ... mu5]]]
 
 					# print(mu.shape,sigma.shape,train_y.shape)	
-					mu = tf.squeeze(mu,axis=1)
+					mu = tf.squeeze(mu,axis=1) # mu: [[mu1,...,mu5]]
 					sigma = tf.squeeze(sigma,axis=1)					
 					# print(mu.shape,sigma.shape)
 
 					sample_total = tf.zeros((Num_sample, tf.shape(train_x)[0], tf.shape(train_y)[1]))
 					# print(sample_total.shape)
-
 					# 对均值为mu,方差为sigma^2的正态分布抽样
 					for t in tf.range(Num_sample):
 						epsilon = tf.random.normal(tf.shape(sigma))
