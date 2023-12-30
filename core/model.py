@@ -8,7 +8,8 @@ from core.utils import Timer
 from keras.layers import Dense, Activation, Dropout, LSTM, Lambda, Layer, Reshape
 from keras.models import Sequential, load_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
-from keras.optimizers import Adam,SGD
+# from keras.optimizers import Adam,SGD
+from tensorflow.keras.optimizers import Adam,SGD
 import keras.backend as K
 
 class CustomLayer(Layer):     

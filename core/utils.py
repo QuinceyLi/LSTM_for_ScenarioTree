@@ -65,7 +65,7 @@ def plus_one(tree_arr: np.array) -> np.array:
 
     return tree_arr
         
-def backtesting(mat_dict:dict, wealth_change_dict:dict, test_data:np.array, decision_method:str) -> dict:
+def backtesting(mat_dict:dict, wealth_change_dict:dict, test_data:np.array, decision_method:str, branch:list) -> dict:
     """
     
     """
@@ -77,7 +77,7 @@ def backtesting(mat_dict:dict, wealth_change_dict:dict, test_data:np.array, deci
         M_tree = tree_data['tree']
         # print(M_tree[0].shape)
 
-        reduced_branch= [15,8,5]
+        reduced_branch= branch
         reduced_node=np.cumprod(reduced_branch)
 
         wealth = [300]
@@ -125,4 +125,6 @@ def backtesting(mat_dict:dict, wealth_change_dict:dict, test_data:np.array, deci
         wealth_change_dict[model_name] = wealth_change_list
 
     return wealth_change_dict
+
+
 

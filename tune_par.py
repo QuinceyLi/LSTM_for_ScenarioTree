@@ -1,4 +1,5 @@
 # %%
+# gpu 4060ti cpu i7
 import os
 import json
 import csv
@@ -11,7 +12,7 @@ from core.data_processor import DataLoader
 from core.model import Model, Bayesian_LSTM
 from core.tree import ScenarioTree
 from core.utils import *
-from keras.utils import plot_model
+# from keras.utils import plot_model
 from PIL import Image
 import scipy.io as sio
 import numpy as np
@@ -20,7 +21,7 @@ from gurobipy import GRB
 from core.Portfolio_model_solved import *
 from pylab import mpl
 import seaborn as sns
-sns.set_theme(style='darkgrid') # 设置风格使图标更美观
+# sns.set_theme(style='darkgrid') # 设置风格使图标更美观
 mpl.rcParams['font.sans-serif'] = ['SimHei'] # 指定字体雅黑，使图可以显示中文
 mpl.rcParams['axes.unicode_minus'] = False # 解决保存图像是负号'-'显示为方块的问题
 

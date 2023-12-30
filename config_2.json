@@ -1,6 +1,6 @@
 {
 	"data": {
-		"filename": "return_data.csv",
+		"filename": "cn_return_data.csv",
 		"columns": [
 			"stock1",
 			"stock2",
@@ -10,7 +10,7 @@
 		],
 		"sequence_length": 20,
 		"train_test_split": 0.96,
-		"normalise": true,
+		"normalise": false,
 		"output_idx": [0,1,2,3,4]
 	},
 	"training": {

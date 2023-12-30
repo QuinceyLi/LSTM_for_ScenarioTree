@@ -35,8 +35,8 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # 参数列表
-EPOCH = [x for x in range(20, 51, 10)]
-SEQ_LEN = [x for x in range(30, 61, 10)]
+EPOCH = [x for x in range(16, 17, 1)]
+SEQ_LEN = [x for x in range(20, 21, 1)]
 
 # 结果字典
 res_dict = {}
@@ -44,7 +44,6 @@ res_dict = {}
 # %%
 def task(e, s):
     print(f"\n当前epoch={e},当前seq_length={s}...\n")
-    print("当前进程：", os.getpid(), " 父进程：", os.getppid())
     res_dict['e' + str(e) + '_l' + str(s)] = {}
     # 读取所需参数
     configs = json.load(open('config_2.json', 'r'))
@@ -78,25 +77,30 @@ def task(e, s):
     # print(x_train[-1,:,:])
 
     # %%
-    # 创建模型
-    BLmodel = Bayesian_LSTM()
-    mymodel = BLmodel.build_model(configs)
+    # # 创建模型
+    # BLmodel = Bayesian_LSTM()
+    # mymodel = BLmodel.build_model(configs)
+    #
+    # # %%
+    # # 训练模型
+    # stime = time.time()
+    # save_model_name = BLmodel.bayesian_train(
+    #     train_dataset,
+    #     epochs=configs['training']['epochs'],
+    #     Num_sample=configs['training']['Num_Sample'],
+    #     save_dir=configs['model']['save_dir'])
+    # # save_model_name = 'test'
+    # etime = time.time()
+    # res_dict['e' + str(e) + '_l' + str(s)]['model_train_time'] = etime - stime
 
-    # %%
-    # 训练模型
-    stime = time.time()
-    save_model_name = BLmodel.bayesian_train(
-        train_dataset,
-        epochs=configs['training']['epochs'],
-        Num_sample=configs['training']['Num_Sample'],
-        save_dir=configs['model']['save_dir'])
-    # save_model_name = 'test'
-    etime = time.time()
-    res_dict['e' + str(e) + '_l' + str(s)]['model_train_time'] = etime - stime
+    # 加载之前已训练好的模型
+    save_model_name = "13122023-101922-e16"
+    BLmodel = Bayesian_LSTM()
+    BLmodel.load_model("./saved_models/" + save_model_name + ".h5")
 
     # %%
     # 生成多个情景树
-    tree_model = ScenarioTree(window=x_train[-1, :, :], model=BLmodel.model, T=3, branch=[1, 15, 8, 5], n_stock=5,
+    tree_model = ScenarioTree(window=x_train[-1, :, :], model=BLmodel.model, T=3, branch=[1, 12, 7, 5], n_stock=5,
                               model_name=save_model_name)
     skip = 4
     roll_step = data.len_test
@@ -110,9 +114,9 @@ def task(e, s):
     # %%
     # 读取情景树数据,做回测
     mat_dict = {
-        "ARMA-GARCH": "ag_tree_04-Nov-2023 10_49_47.mat",
-        "kmeans": "kmeans_tree_04-Nov-2023 13_40_44.mat",
-        "moment_matching": "mm_tree_04-Nov-2023 16_49_08.mat",
+        "ARMA-GARCH": "cnag_tree_27-Dec-2023 11_59_22.mat",
+        "kmeans": "kmeans_tree_27-Dec-2023 16_30_53.mat",
+        "moment_matching": "cnmm_tree_27-Dec-2023 17_39_15.mat",
         "NN": tree_name
     }
 
@@ -124,7 +128,7 @@ def task(e, s):
     }
     decision_method = ["meancvar", "mv"]
     for d in decision_method:
-        wealth_change_dict = backtesting(mat_dict, wealth_change_dict, data.data_test, d)
+        wealth_change_dict = backtesting(mat_dict, wealth_change_dict, data.data_test, d, [12,7,5])
 
         w = wealth_change_dict['NN']
         w = np.array(w)
@@ -138,7 +142,7 @@ def task(e, s):
             wealth_df[model_name] = wealth_change_list
 
         # 保存数据
-        res_folder = 'e' + str(e) + '_' + 'l' + str(s)
+        res_folder = 'cn'+'e' + str(e) + '_' + 'l' + str(s) + '_2'
 
         if not os.path.exists('./results/tune_par/' + res_folder + '/'):
             os.makedirs('./results/tune_par/' + res_folder + '/')
@@ -159,14 +163,15 @@ def task(e, s):
 if __name__ == '__main__':
     task_list = []
 
-    for e,s in zip(EPOCH, SEQ_LEN):
-        task_list.append(delayed(task)(e,s))
+    for e in EPOCH:
+        for s in SEQ_LEN:
+            task_list.append(delayed(task)(e, s))
 
     gpus = tf.config.experimental.list_physical_devices("GPU")
     for gpu in gpus:
         tf.config.experimental.set_memory_growth(gpu, True)
 
-    multiwork = Parallel(n_jobs=-2, backend='multiprocessing')
+    multiwork = Parallel(n_jobs=1, backend='multiprocessing')
     res = multiwork(task_list)
 
 
